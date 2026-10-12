@@ -90,6 +90,7 @@ kotlin {
         }
         it.binaries.framework {
             export(libs.multipaz)
+            export(libs.multipaz.facenet)
             export(libs.multipaz.dcapi)
             export(libs.multipaz.doctypes)
             export(libs.multipaz.utopia)
@@ -118,6 +119,7 @@ kotlin {
             )
             linkerOpts(
                 "-lsqlite3",
+                "-lc++",
                 "-Wl,-rpath,/usr/lib/swift"
             )
             xcf.add(this)
@@ -136,6 +138,7 @@ kotlin {
                 implementation(libs.kotlin.stdlib)
                 // Add KMP dependencies here
                 api(libs.multipaz)
+                api(libs.multipaz.facenet)
                 api(libs.multipaz.doctypes)
                 api(libs.multipaz.utopia)
             }

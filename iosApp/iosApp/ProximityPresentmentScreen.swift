@@ -120,7 +120,7 @@ struct ProximityPresentmentScreen: View {
         case .waitingForUserInput:
             EmptyView()
 
-        case .completed(let errorMessage, let isCannotSatisfy):
+        case .completed(let errorMessage, let isCannotSatisfy, let isFaceNotMatched):
             VStack(spacing: 24) {
                 if errorMessage != nil {
                     LottieView(animation: .named("error_animation"))
@@ -130,6 +130,10 @@ struct ProximityPresentmentScreen: View {
 
                     if isCannotSatisfy {
                         Text("Cannot satisfy request")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                    } else if isFaceNotMatched {
+                        Text("Face verification failed")
                             .font(.headline)
                             .foregroundColor(.primary)
                     } else {

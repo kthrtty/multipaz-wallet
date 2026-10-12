@@ -100,7 +100,7 @@
 		<string>zh-Hans</string>
 	</array>
 	<key>NSCameraUsageDescription</key>
-	<string>Camera permission is needed to scan QR codes for credential offers.</string>
+	<string>Camera permission is needed to scan QR codes and perform biometric face verification.</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>

@@ -139,4 +139,25 @@ class SettingsModelTest {
         assertEquals(certChain.certificates.size, settingsModel2.customVerificationReaderCertChain.value?.certificates?.size)
         assertEquals(certChain.certificates[0].subject.name, settingsModel2.customVerificationReaderCertChain.value?.certificates?.get(0)?.subject?.name)
     }
+
+    @Test
+    fun testPresentmentFaceMatcherDefaultsToMobileFaceNet() = runBlocking {
+        val storage = EphemeralStorage()
+        val settingsModel = SettingsModel.create(storage)
+
+        assertEquals("MobileFaceNet", settingsModel.presentmentFaceMatcher.value)
+    }
+
+    @Test
+    fun testPresentmentFaceMatcherPersistsAcrossInstances() = runBlocking {
+        val storage = EphemeralStorage()
+        val settingsModel1 = SettingsModel.create(storage)
+
+        settingsModel1.presentmentFaceMatcher.value = "MobileFaceNet (debug)"
+        delay(100)
+        assertEquals("MobileFaceNet (debug)", settingsModel1.presentmentFaceMatcher.value)
+
+        val settingsModel2 = SettingsModel.create(storage)
+        assertEquals("MobileFaceNet (debug)", settingsModel2.presentmentFaceMatcher.value)
+    }
 }

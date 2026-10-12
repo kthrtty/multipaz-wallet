@@ -10,6 +10,8 @@ This repository contains code for the Multipaz Wallet application
 - `webApp` is the Web wallet client, using Kotlin/JS, React, and Tailwind CSS
   (see [webApp/README.md](webApp/README.md)).
 - `backend` is the wallet backend.
+- `facematcher` contains the face matching machine learning model and
+  provenance information (see [facematcher/README.md](facematcher/README.md)).
 
 ## What is Multipaz?
 

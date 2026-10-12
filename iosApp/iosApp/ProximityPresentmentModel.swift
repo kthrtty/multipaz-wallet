@@ -13,7 +13,7 @@ class ProximityPresentmentModel {
         case waitingForRequest
         case waitingForUserInput
         case sendingResponse
-        case completed(errorMessage: String?, isCannotSatisfy: Bool)
+        case completed(errorMessage: String?, isCannotSatisfy: Bool, isFaceNotMatched: Bool)
     }
 
     var state: State = .idle
@@ -123,15 +123,17 @@ class ProximityPresentmentModel {
                 )
 
                 if !Task.isCancelled {
-                    self.state = .completed(errorMessage: nil, isCannotSatisfy: false)
+                    self.state = .completed(errorMessage: nil, isCannotSatisfy: false, isFaceNotMatched: false)
                 }
             } catch {
                 if !Task.isCancelled {
                     self.transactionError = error
                     let cannotSatisfy = self.isCannotSatisfyRequest(error)
+                    let faceNotMatched = self.isFaceNotMatched(error)
                     self.state = .completed(
                         errorMessage: error.localizedDescription,
-                        isCannotSatisfy: cannotSatisfy
+                        isCannotSatisfy: cannotSatisfy,
+                        isFaceNotMatched: faceNotMatched
                     )
                 }
             }
@@ -175,6 +177,27 @@ class ProximityPresentmentModel {
         }
         let errorDescription = String(describing: error)
         if errorDescription.contains("PresentmentCannotSatisfyRequestException") {
+            return true
+        }
+        return false
+    }
+
+    private func isFaceNotMatched(_ error: Error) -> Bool {
+        if error is FaceNotMatchedException {
+            return true
+        }
+        let nsErrorObj = error as NSError
+        if let kotlinException = nsErrorObj.userInfo["KotlinException"] {
+            if kotlinException is FaceNotMatchedException {
+                return true
+            }
+            let typeName = String(describing: type(of: kotlinException))
+            if typeName.contains("FaceNotMatchedException") {
+                return true
+            }
+        }
+        let errorDescription = String(describing: error)
+        if errorDescription.contains("FaceNotMatchedException") {
             return true
         }
         return false

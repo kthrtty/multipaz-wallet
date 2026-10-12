@@ -101,6 +101,7 @@ import org.multipaz.wallet.android.ui.settings.AboutScreen
 import org.multipaz.wallet.android.ui.settings.ActivityLoggingSettingsScreen
 import org.multipaz.wallet.android.ui.settings.DeveloperSettingsConfigureWalletBackendDialog
 import org.multipaz.wallet.android.ui.settings.DeveloperSettingsConnectToWalletServerDialog
+import org.multipaz.wallet.android.ui.settings.DeveloperSettingsSelectFaceMatcherDialog
 import org.multipaz.wallet.android.ui.settings.DeveloperAddPhotoIdScreen
 import org.multipaz.wallet.android.ui.settings.DeveloperSettingsScreen
 import org.multipaz.wallet.android.ui.settings.DeveloperModeDocumentationScreen
@@ -1278,6 +1279,9 @@ fun mainGraph(
                     onConfigureWalletBackendClicked = {
                         backStack.add(DeveloperSettingsConfigureWalletBackendDialogDestination)
                     },
+                    onSelectFaceMatcherClicked = {
+                        backStack.add(DeveloperSettingsSelectFaceMatcherDialogDestination)
+                    },
                     onRunFirstTimeSetupClicked = {
                         backStack.clear()
                         backStack.add(SetupWelcomeScreenDestination)
@@ -1358,6 +1362,22 @@ fun mainGraph(
                         val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
                         am.clearApplicationUserData()
                     }
+                )
+            }
+            is DeveloperSettingsSelectFaceMatcherDialogDestination -> NavEntry(
+                key = key,
+                metadata = DialogSceneStrategy.dialog()
+            ) {
+                val choices = remember {
+                    app.faceMatcherRepository.all.map { it.displayName } + listOf("None")
+                }
+                DeveloperSettingsSelectFaceMatcherDialog(
+                    settingsModel = settingsModel,
+                    choices = choices,
+                    onSelected = { selectedMatcher ->
+                        settingsModel.presentmentFaceMatcher.value = selectedMatcher
+                    },
+                    onDismissed = { backStack.removeAt(backStack.size - 1) }
                 )
             }
             is DeveloperSettingsConfigureWalletBackendDialogDestination -> NavEntry(

@@ -60,10 +60,18 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+    sourceSets {
+        getByName("main") {
+            assets.directories.add("../facematcher")
+        }
+    }
     buildFeatures {
         compose = true
         resValues = true
         buildConfig = true
+    }
+    androidResources {
+        ignoreAssetsPattern = "*.md"
     }
     packaging {
         resources {
@@ -77,6 +85,11 @@ android {
     testOptions {
         unitTests.isReturnDefaultValues = true
     }
+}
+
+configurations.all {
+    exclude(group = "com.google.ai.edge.litert", module = "litert-support")
+    exclude(group = "com.google.ai.edge.litert", module = "litert-support-api")
 }
 
 dependencies {
@@ -99,6 +112,7 @@ dependencies {
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.multipaz)
+    implementation(libs.multipaz.facenet)
     implementation(libs.multipaz.doctypes)
     implementation(libs.multipaz.utopia)
     implementation(libs.multipaz.dcapi)

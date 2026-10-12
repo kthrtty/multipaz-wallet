@@ -170,6 +170,7 @@ class SettingsModel private constructor(
         bind(verificationIssuerIdentifiers, "verificationIssuerIdentifiers", emptyList<ByteString>())
         bind(customVerificationReaderKey, "customVerificationReaderKey", null)
         bind(customVerificationReaderCertChain, "customVerificationReaderCertChain", null)
+        bind(presentmentFaceMatcher, "presentmentFaceMatcher", "MobileFaceNet")
 
         Logger.isDebugEnabled = loggingDebugEnabled.value
         CoroutineScope(Dispatchers.Default).launch {
@@ -204,6 +205,7 @@ class SettingsModel private constructor(
     val verificationIssuerIdentifiers = MutableStateFlow<List<ByteString>>(emptyList())
     val customVerificationReaderKey = MutableStateFlow<EcPrivateKey?>(null)
     val customVerificationReaderCertChain = MutableStateFlow<X509CertChain?>(null)
+    val presentmentFaceMatcher = MutableStateFlow<String>("MobileFaceNet")
 
     /**
      * Checks whether any non-default advanced verification settings are currently configured.

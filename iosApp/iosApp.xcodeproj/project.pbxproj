@@ -10,6 +10,7 @@
 		51A18EBE2F70FD9D0050476D /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 51A18EBD2F70FD9D0050476D /* GoogleSignIn */; };
 		51A18EC02F70FD9D0050476D /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 51A18EBF2F70FD9D0050476D /* GoogleSignInSwift */; };
 		7B2468A82F7193D30018E778 /* Multipaz in Frameworks */ = {isa = PBXBuildFile; productRef = 7B2468A72F7193D30018E778 /* Multipaz */; };
+		7B2468AD2F7195200018E778 /* mobile_facenet.tflite in Resources */ = {isa = PBXBuildFile; fileRef = 7B2468AC2F7195200018E778 /* mobile_facenet.tflite */; };
 		7B28110B2FF6EE7200BAAD14 /* IdentityDocumentProviderExtension.appex in Embed ExtensionKit Extensions */ = {isa = PBXBuildFile; fileRef = 7B2811042FF6EE7100BAAD14 /* IdentityDocumentProviderExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		7B3000012F7193D30018E778 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 7B3000022F7193D30018E778 /* Lottie */; };
 /* End PBXBuildFile section */
@@ -57,6 +58,7 @@
 		512890FD2F7041BB0001CB22 /* iosAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iosAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		512891072F7041BB0001CB22 /* iosAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iosAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B2468A22F71933E0018E778 /* shared.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = shared.xcframework; path = ../shared/build/XCFrameworks/release/shared.xcframework; sourceTree = "<group>"; };
+		7B2468AC2F7195200018E778 /* mobile_facenet.tflite */ = {isa = PBXFileReference; lastKnownFileType = file; name = mobile_facenet.tflite; path = ../facematcher/mobile_facenet.tflite; sourceTree = "<group>"; };
 		7B2811042FF6EE7100BAAD14 /* IdentityDocumentProviderExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.extensionkit-extension"; includeInIndex = 0; path = IdentityDocumentProviderExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B2811122FF6EE7200BAAD14 /* DeveloperConfig.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = DeveloperConfig.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -152,6 +154,7 @@
 				7B2811052FF6EE7200BAAD14 /* IdentityDocumentProviderExtension */,
 				513CB7752F705CC2004CF8F7 /* Frameworks */,
 				7B2811122FF6EE7200BAAD14 /* DeveloperConfig.xcconfig */,
+				7B2468AC2F7195200018E778 /* mobile_facenet.tflite */,
 				512890F12F7041B90001CB22 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -332,6 +335,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7B2468AD2F7195200018E778 /* mobile_facenet.tflite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -444,7 +448,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = "$(inherited)";
+				DEVELOPMENT_TEAM = VKE2G3K56V;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -509,7 +513,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = "$(inherited)";
+				DEVELOPMENT_TEAM = VKE2G3K56V;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;

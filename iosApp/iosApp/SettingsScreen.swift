@@ -7,9 +7,11 @@ struct SettingsScreen: View {
     
     @State private var isSigningIn = false
     @State private var isSigningOut = false
+    @State private var showFaceMatcherDialog = false
     
     var body: some View {
-        ScrollView {
+        ZStack {
+            ScrollView {
             VStack(spacing: 20) {
                 FloatingItemList(title: "Account") {
                     if let signedInUser = viewModel.signedInUser {
@@ -136,6 +138,17 @@ struct SettingsScreen: View {
                         image: { Image(systemName: "lock").frame(width: 24, height: 24) }
                     ).onTapGesture {
                     }
+                    // TODO: Move presentation face matcher selector to Developer Settings once iOS gains Developer Settings capability.
+                    FloatingItemText(
+                        text: "Presentation face matcher",
+                        showChevron: true,
+                        secondary: viewModel.settings.presentmentFaceMatcher,
+                        image: { Image(systemName: "faceid").frame(width: 24, height: 24) }
+                    ).onTapGesture {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            showFaceMatcherDialog = true
+                        }
+                    }
                     if viewModel.settings.devMode {
                         FloatingItemText(
                             text: "Developer settings",
@@ -155,7 +168,25 @@ struct SettingsScreen: View {
             .padding([.leading, .trailing])
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .navigationTitle("Settings")
-        .navigationBarTitleDisplayMode(.inline)
+
+        if showFaceMatcherDialog {
+            let matcherChoices = (viewModel.faceMatcherRepository?.all.map { $0.displayName } ?? []) + ["None"]
+            SelectFaceMatcherDialog(
+                choices: matcherChoices,
+                selected: Binding(
+                    get: { viewModel.settings.presentmentFaceMatcher },
+                    set: { viewModel.settings.presentmentFaceMatcher = $0 }
+                ),
+                onDismissed: {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        showFaceMatcherDialog = false
+                    }
+                }
+            )
+            .transition(.opacity.combined(with: .scale(scale: 0.95)))
+        }
     }
+    .navigationTitle("Settings")
+    .navigationBarTitleDisplayMode(.inline)
+}
 }

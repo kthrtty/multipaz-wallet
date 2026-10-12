@@ -55,6 +55,9 @@ import org.multipaz.eventlogger.EventPresentment
 import org.multipaz.eventlogger.EventPresentmentIso18013Proximity
 import org.multipaz.eventlogger.EventVerification
 import org.multipaz.eventlogger.SimpleEventLogger
+import org.multipaz.facematch.FaceMatcherRepository
+import org.multipaz.facenet.FaceNetFaceMatcher
+import org.multipaz.facenet.FaceNetModelConfig
 import org.multipaz.mdoc.zkp.ZkSystemRepository
 import org.multipaz.mdoc.zkp.longfellow.LongfellowZkSystem
 import org.multipaz.presentment.ConsentData
@@ -140,6 +143,8 @@ class App private constructor() {
     private lateinit var documentModel: DocumentModel
     lateinit var eventLogger: SimpleEventLogger
         private set
+    lateinit var faceMatcherRepository: FaceMatcherRepository
+        private set
     private lateinit var presentmentSource: PresentmentSource
     lateinit var provisioningModel: ProvisioningModel
         private set
@@ -177,6 +182,24 @@ class App private constructor() {
         val longfellow = LongfellowZkSystem()
         longfellow.addDefaultCircuits()
         zkSystemRepository.add(longfellow)
+        val modelBytes = applicationContext.assets.open("mobile_facenet.tflite").use {
+            ByteString(it.readBytes())
+        }
+        faceMatcherRepository = FaceMatcherRepository().apply {
+            add(
+                FaceNetFaceMatcher(
+                    modelBytes = modelBytes,
+                    config = FaceNetModelConfig.MOBILE_FACENET
+                )
+            )
+            add(
+                FaceNetFaceMatcher(
+                    modelBytes = modelBytes,
+                    config = FaceNetModelConfig.MOBILE_FACENET,
+                    debug = true
+                )
+            )
+        }
         documentTypeRepository = DocumentTypeRepository()
         documentTypeRepository.addKnownTypes()
         documentTypeRepository.addUtopiaTypes()
@@ -195,6 +218,16 @@ class App private constructor() {
             documentTypeRepository = documentTypeRepository,
             zkSystemRepository = zkSystemRepository,
             eventLogger = eventLogger,
+            getFaceMatcherFn = {
+                val selected = settingsModel.presentmentFaceMatcher.value
+                if (selected == "None") {
+                    null
+                } else {
+                    faceMatcherRepository.all.find { it.displayName == selected }
+                        ?: faceMatcherRepository.lookup(selected)
+                        ?: faceMatcherRepository.defaultMatcher
+                }
+            },
             resolveTrustFn = { requester ->
                 for (identity in requester.requesterIdentities) {
                     val certChain = identity.certChain
@@ -884,6 +917,11 @@ class App private constructor() {
             // TODO: optimize this so we only initialize what's needed for the PresentmentSource
             val app = getInstance()
             return app.presentmentSource
+        }
+
+        suspend fun getFaceMatcherRepository(): FaceMatcherRepository {
+            val app = getInstance()
+            return app.faceMatcherRepository
         }
     }
 }

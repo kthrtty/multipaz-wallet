@@ -31,6 +31,7 @@ class ViewModel {
     var backendReaderTrustManagerModel: TrustManagerModel!
     var provisioningModel: ProvisioningModel!
     //var provisioningSupport: ProvisioningSupport!
+    var faceMatcherRepository: FaceMatcherRepository!
 
     var walletClient: WalletClient!
     var signedInUser: WalletClientSignedInUser? = nil
@@ -100,6 +101,16 @@ class ViewModel {
         Logger.shared.isDebugEnabled = true  // TODO: read this from settings
         
         PromptModel.Companion.shared.setGlobal(promptModel: promptModel)
+        
+        if let url = Bundle.main.url(forResource: "mobile_facenet", withExtension: "tflite"),
+           let data = try? Data(contentsOf: url) {
+            let modelBytes = data.toByteString()
+            faceMatcherRepository = FaceMatcherRepository()
+            faceMatcherRepository.add(faceMatcher: FaceNetFaceMatcher(modelBytes: modelBytes))
+            faceMatcherRepository.add(faceMatcher: FaceNetFaceMatcher(modelBytes: modelBytes, debug: true))
+        } else {
+            Logger.shared.w(tag: "ViewModel", msg: "mobile_facenet.tflite not found in bundle, face matching unavailable")
+        }
         
         storage = IosStorage(
             storageFileUrl: FileManager.default.containerURL(
@@ -442,6 +453,15 @@ class ViewModel {
             documentStore: documentStore,
             documentTypeRepository: documentTypeRepository,
             zkSystemRepository: zkSystemRepository,
+            getFaceMatcherFn: {
+                let selected = self.settings.presentmentFaceMatcher
+                if selected == "None" || self.faceMatcherRepository == nil {
+                    return nil
+                }
+                return self.faceMatcherRepository.lookup(name: selected)
+                    ?? self.faceMatcherRepository.all.first { $0.displayName == selected }
+                    ?? self.faceMatcherRepository.defaultMatcher
+            },
             resolveTrustFn: { requester in
                 for identity in requester.requesterIdentities {
                     let certChain = identity.certChain
@@ -471,6 +491,9 @@ class ViewModel {
                         onDocumentsInFocus(documents)
                     }
                 )
+            },
+            getFaceMatchingModeFn: { credential, requesterIdentities in
+                return FaceMatchingMode.onlyIfRequested
             },
             preferSignatureToKeyAgreement: true,
             domainsMdocSignature: [ Domains.shared.DOMAIN_MDOC_USER_AUTH, Domains.shared.DOMAIN_MDOC_SOFTWARE ],

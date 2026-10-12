@@ -178,6 +178,9 @@ data object SignOutConfirmationDialogDestination: Destination()
 data object DeveloperSettingsConfigureWalletBackendDialogDestination: Destination()
 
 @Serializable
+data object DeveloperSettingsSelectFaceMatcherDialogDestination: Destination()
+
+@Serializable
 data object DeveloperSettingsClearAppDataDialogDestination: Destination()
 
 @Serializable

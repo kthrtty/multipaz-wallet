@@ -25,6 +25,12 @@ class SettingsModel {
         }
     }
     
+    var presentmentFaceMatcher: String {
+        didSet {
+            defaults.set(presentmentFaceMatcher, forKey: "presentmentFaceMatcher")
+        }
+    }
+    
     // MARK: - Initialization
     
     init() {
@@ -32,6 +38,7 @@ class SettingsModel {
         self.explicitlySignedOut = defaults.bool(forKey: "explicitlySignedOut")
         self.devMode = defaults.bool(forKey: "devMode")
         self.provisioningServerUrl = defaults.string(forKey: "provisioningServerUrl") ?? "https://issuer.multipaz.org/issuer"
+        self.presentmentFaceMatcher = defaults.string(forKey: "presentmentFaceMatcher") ?? "MobileFaceNet"
     }
     
     // MARK: - Methods
@@ -40,6 +47,7 @@ class SettingsModel {
         explicitlySignedOut = false
         devMode = false
         provisioningServerUrl = "https://issuer.multipaz.org/issuer"
+        presentmentFaceMatcher = "MobileFaceNet"
     }
     
 }

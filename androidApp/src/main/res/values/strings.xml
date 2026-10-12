@@ -165,6 +165,12 @@
     <string name="dev_settings_logging_debug_text">Enable debug to print out structures helpful for debugging. Warning: debug messages may contain PII.</string>
     <string name="dev_settings_disable_no_user_auth_title">Always require auth for presentment</string>
     <string name="dev_settings_disable_no_user_auth_text">If enabled, the wallet will not request `no_user_auth` credentials and if available, won\'t be used at presentment time</string>
+    <string name="dev_settings_face_matcher_title">Presentation face matcher</string>
+    <string name="dev_settings_face_matcher_dialog_title">Select face matcher</string>
+    <string name="dev_settings_face_matcher_dialog_close">Close</string>
+    <string name="dev_settings_face_matcher_mobilefacenet_blurb">Intended only for development and testing and does not provide biometric security guarantees.</string>
+    <string name="dev_settings_face_matcher_mobilefacenet_debug_blurb">Includes a debug option to bypass verification. Intended only for development and testing and does not provide biometric security guarantees.</string>
+    <string name="dev_settings_face_matcher_none_blurb">Disables face matching during credential presentation.</string>
     <string name="dev_settings_corrupt_key_title">Corrupt encryption key in Google Drive</string>
     <string name="dev_settings_corrupt_key_text">This can be used to test the recovery flow for when the encryption key is corrupted.</string>
     <string name="dev_settings_not_signed_in">User is not signed in</string>

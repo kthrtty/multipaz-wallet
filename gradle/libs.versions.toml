@@ -78,6 +78,7 @@ multipaz-longfellow = { group = "org.multipaz", name = "multipaz-longfellow", ve
 multipaz-compose = { group = "org.multipaz", name = "multipaz-compose", version.ref = "multipaz" }
 multipaz-swiftui = { group = "org.multipaz", name = "multipaz-swiftui", version.ref = "multipaz" }
 multipaz-cbor-rpc = { group = "org.multipaz", name = "multipaz-cbor-rpc", version.ref = "multipaz" }
+multipaz-facenet = { group = "org.multipaz", name = "multipaz-facenet", version.ref = "multipaz" }
 multipaz-server = { group = "org.multipaz", name = "multipaz-server", version.ref = "multipaz" }
 multipaz-utopia = { group = "org.multipaz", name = "multipaz-utopia", version.ref = "multipaz" }
 ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }

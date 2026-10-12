@@ -20,6 +20,7 @@ import androidx.compose.material.icons.outlined.Cloud
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.DoorBack
+import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material.icons.outlined.NoEncryption
 import androidx.compose.material.icons.outlined.Remove
 import androidx.compose.material.icons.outlined.RestartAlt
@@ -73,6 +74,7 @@ fun DeveloperSettingsScreen(
     settingsModel: SettingsModel,
     onCorruptEncryptionKeyClicked: () -> Unit,
     onConfigureWalletBackendClicked: () -> Unit,
+    onSelectFaceMatcherClicked: () -> Unit,
     onRunFirstTimeSetupClicked: () -> Unit,
     onClearAppDataClicked: () -> Unit,
     onClearReaderKeys: () -> Unit,
@@ -250,6 +252,21 @@ fun DeveloperSettingsScreen(
                     },
                     heading = stringResource(R.string.dev_settings_set_backend_title),
                     text = walletBackendText
+                )
+
+                val currentFaceMatcher = settingsModel.presentmentFaceMatcher.collectAsState().value
+                FloatingItemHeadingAndText(
+                    modifier = Modifier.clickable {
+                        onSelectFaceMatcherClicked()
+                    },
+                    image = {
+                        Icon(
+                            imageVector = Icons.Outlined.Face,
+                            contentDescription = null
+                        )
+                    },
+                    heading = stringResource(R.string.dev_settings_face_matcher_title),
+                    text = currentFaceMatcher
                 )
 
                 FloatingItemHeadingAndText(
