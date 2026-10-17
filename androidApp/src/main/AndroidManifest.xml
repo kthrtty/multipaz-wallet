@@ -231,7 +231,7 @@
         </activity>
 
         <service
-            android:name=".WalletCombinedNfcService"
+            android:name=".WalletNfcApduRouter"
             android:exported="true"
             android:label="@string/combined_nfc_service_description"
             android:permission="android.permission.BIND_NFC_SERVICE">

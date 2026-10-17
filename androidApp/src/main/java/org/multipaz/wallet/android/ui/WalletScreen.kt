@@ -137,7 +137,6 @@ import org.multipaz.compose.cards.VerticalCardList
 import org.multipaz.compose.prompt.PresentmentActivity
 import org.multipaz.wallet.android.App
 import org.multipaz.wallet.android.MainActivity
-import org.multipaz.wallet.android.WalletCombinedNfcService
 import org.multipaz.compose.cards.VerticalCardListState
 import org.multipaz.compose.cards.WarningCard
 import org.multipaz.compose.document.DocumentInfo

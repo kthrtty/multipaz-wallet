@@ -105,7 +105,7 @@ fun getPendingIntentForLaunchingQuickAccessWallet(
                 /* flags = */ PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         },
-        preferredService = ComponentName(applicationContext, WalletCombinedNfcService::class.java),
+        preferredService = ComponentName(applicationContext, WalletNfcApduRouter::class.java),
         onDocumentSelected = { documentId ->
             app.quickAccessWalletFocusedDocumentId.value = documentId
         }
