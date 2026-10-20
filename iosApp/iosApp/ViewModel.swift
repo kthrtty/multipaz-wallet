@@ -218,7 +218,7 @@ class ViewModel {
         //)
         //await self.provisioningSupport.initialize()
         
-        let dcApi = try! await DigitalCredentialsCompanion.shared.getDefault()
+        let dcApi = try! await DigitalCredentialsIos.companion.create()
         if dcApi.registerAvailable {
             do {
                 try await dcApi.register(

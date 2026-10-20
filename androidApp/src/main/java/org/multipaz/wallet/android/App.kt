@@ -41,8 +41,7 @@ import org.multipaz.compose.document.DocumentModel
 import org.multipaz.compose.prompt.PromptDialogs
 import org.multipaz.compose.trustmanagement.TrustManagerModel
 import org.multipaz.context.applicationContext
-import org.multipaz.digitalcredentials.DigitalCredentials
-import org.multipaz.digitalcredentials.getDefault
+import org.multipaz.digitalcredentials.DigitalCredentialsCredman
 import org.multipaz.document.Document
 import org.multipaz.document.DocumentBadge
 import org.multipaz.document.DocumentBadgeColor
@@ -249,7 +248,7 @@ class App private constructor() {
             domainsKeyBoundSdJwt = listOf(Domains.DOMAIN_SDJWT_USER_AUTH, Domains.DOMAIN_SDJWT_SOFTWARE),
             domainsKeylessSdJwt = listOf(Domains.DOMAIN_SDJWT_KEYLESS, Domains.DOMAIN_SDJWT_SOFTWARE),
         )
-        val digitalCredentials = DigitalCredentials.getDefault()
+        val digitalCredentials = DigitalCredentialsCredman.create()
         if (digitalCredentials.registerAvailable) {
             try {
                 digitalCredentials.register(

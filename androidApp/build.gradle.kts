@@ -115,7 +115,7 @@ dependencies {
     implementation(libs.multipaz.facenet)
     implementation(libs.multipaz.doctypes)
     implementation(libs.multipaz.utopia)
-    implementation(libs.multipaz.dcapi)
+    implementation(libs.multipaz.dcapi.credman)
     implementation(libs.multipaz.compose)
     implementation(libs.multipaz.longfellow)
     implementation(libs.ktor.client.android)

@@ -72,7 +72,8 @@ androidx-compose-material-icons-extended = { group = "androidx.compose.material"
 androidx-navigation3-runtime = { group = "androidx.navigation3", name = "navigation3-runtime", version.ref = "navigation3" }
 androidx-navigation3-ui = { group = "androidx.navigation3", name = "navigation3-ui", version.ref = "navigation3" }
 multipaz = { group = "org.multipaz", name = "multipaz", version.ref = "multipaz" }
-multipaz-dcapi = { group = "org.multipaz", name = "multipaz-dcapi", version.ref = "multipaz" }
+multipaz-dcapi-credman = { group = "org.multipaz", name = "multipaz-dcapi-credman", version.ref = "multipaz" }
+multipaz-dcapi-ios = { group = "org.multipaz", name = "multipaz-dcapi-ios", version.ref = "multipaz" }
 multipaz-doctypes = { group = "org.multipaz", name = "multipaz-doctypes", version.ref = "multipaz" }
 multipaz-longfellow = { group = "org.multipaz", name = "multipaz-longfellow", version.ref = "multipaz" }
 multipaz-compose = { group = "org.multipaz", name = "multipaz-compose", version.ref = "multipaz" }

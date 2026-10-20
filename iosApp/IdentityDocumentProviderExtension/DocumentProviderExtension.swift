@@ -158,7 +158,7 @@ struct DocumentProviderExtension: IdentityDocumentProvider {
         initializeLogging()
         Logger.shared.i(tag: TAG, msg: "Handling performRegistrationUpdates")
         let source = await getPresentmentSource()
-        let dcApi = try! await DigitalCredentialsCompanion.shared.getDefault()
+        let dcApi = try! await DigitalCredentialsIos.companion.create()
         if dcApi.registerAvailable {
             do {
                 try await dcApi.register(

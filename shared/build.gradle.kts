@@ -91,7 +91,7 @@ kotlin {
         it.binaries.framework {
             export(libs.multipaz)
             export(libs.multipaz.facenet)
-            export(libs.multipaz.dcapi)
+            export(libs.multipaz.dcapi.ios)
             export(libs.multipaz.doctypes)
             export(libs.multipaz.utopia)
             export(libs.multipaz.longfellow)
@@ -175,7 +175,7 @@ kotlin {
                 // part of KMP’s default source set hierarchy. Note that this source set depends
                 // on common by default and will correctly pull the iOS artifacts of any
                 // KMP dependencies declared in commonMain.
-                api(libs.multipaz.dcapi)
+                api(libs.multipaz.dcapi.ios)
                 api(libs.multipaz.doctypes)
                 api(libs.multipaz.utopia)
                 api(libs.multipaz.longfellow)
