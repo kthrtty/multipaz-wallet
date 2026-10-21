@@ -162,7 +162,7 @@ data class EventViewerDestination(
 data object DeveloperSettingsDestination: Destination()
 
 @Serializable
-data object DeveloperAddPhotoIdDestination: Destination()
+data object DeveloperAddSelfSignedDocumentDestination: Destination()
 
 @Serializable
 data object DeveloperModeDocumentationDestination: Destination()

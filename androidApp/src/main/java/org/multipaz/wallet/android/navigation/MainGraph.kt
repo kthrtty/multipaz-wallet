@@ -102,7 +102,7 @@ import org.multipaz.wallet.android.ui.settings.ActivityLoggingSettingsScreen
 import org.multipaz.wallet.android.ui.settings.DeveloperSettingsConfigureWalletBackendDialog
 import org.multipaz.wallet.android.ui.settings.DeveloperSettingsConnectToWalletServerDialog
 import org.multipaz.wallet.android.ui.settings.DeveloperSettingsSelectFaceMatcherDialog
-import org.multipaz.wallet.android.ui.settings.DeveloperAddPhotoIdScreen
+import org.multipaz.wallet.android.ui.settings.DeveloperAddSelfSignedDocumentScreen
 import org.multipaz.wallet.android.ui.settings.DeveloperSettingsScreen
 import org.multipaz.wallet.android.ui.settings.DeveloperModeDocumentationScreen
 import org.multipaz.wallet.android.ui.settings.PreconsentSettingsScreen
@@ -752,8 +752,8 @@ fun mainGraph(
                     onEnterIssuerUrlClicked = {
                         backStack.add(EnterIssuerUrlDestination)
                     },
-                    onAddPhotoIdClicked = {
-                        backStack.add(DeveloperAddPhotoIdDestination)
+                    onAddSelfSignedDocumentClicked = {
+                        backStack.add(DeveloperAddSelfSignedDocumentDestination)
                     },
                     onBackClicked = { backStack.removeAt(backStack.size - 1) },
                     showToast = showToast
@@ -1321,13 +1321,14 @@ fun mainGraph(
                     showToast = showToast
                 )
             }
-            is DeveloperAddPhotoIdDestination -> NavEntry(key) {
-                DeveloperAddPhotoIdScreen(
+            is DeveloperAddSelfSignedDocumentDestination -> NavEntry(key) {
+                DeveloperAddSelfSignedDocumentScreen(
                     documentStore = documentStore,
                     secureArea = secureArea,
                     userIssuerTrustManager = app.userIssuerTrustManager,
                     settingsModel = settingsModel,
-                    onPhotoIdCreated = { document ->
+                    documentTypeRepository = documentTypeRepository,
+                    onDocumentCreated = { document ->
                         backStack.clear()
                         backStack.add(WalletDestination())
                         backStack.add(

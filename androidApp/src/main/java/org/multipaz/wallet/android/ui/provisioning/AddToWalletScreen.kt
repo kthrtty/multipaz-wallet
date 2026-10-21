@@ -67,7 +67,7 @@ fun AddToWalletScreen(
     onImportMpzPass: (encodedMpzPass: ByteString) -> Unit,
     onScanCredentialOfferClicked: () -> Unit,
     onEnterIssuerUrlClicked: () -> Unit,
-    onAddPhotoIdClicked: () -> Unit,
+    onAddSelfSignedDocumentClicked: () -> Unit,
     onBackClicked: () -> Unit,
     showToast: (message: String) -> Unit
 ) {
@@ -215,9 +215,9 @@ fun AddToWalletScreen(
                     )
                     if (settingsModel.devMode.collectAsState().value) {
                         FloatingItemText(
-                            modifier = Modifier.clickable { onAddPhotoIdClicked() },
+                            modifier = Modifier.clickable { onAddSelfSignedDocumentClicked() },
                             showChevron = true,
-                            text = stringResource(R.string.provisioning_add_to_wallet_screen_add_photo_id),
+                            text = stringResource(R.string.provisioning_add_to_wallet_screen_add_self_signed_document),
                             image = {
                                 Icon(
                                     modifier = Modifier
