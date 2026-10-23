@@ -278,10 +278,12 @@ class DeveloperSelfSignedDocumentIssuerTest {
         assertEquals(EUPersonalID.EUPID_DOCTYPE, mdocCred!!.mso.docType)
         val euMdocData = mdocCred.issuerNamespaces.data[EUPersonalID.EUPID_NAMESPACE]!!
             .mapValues { it.value.dataElementValue }
+        assertEquals("Erika", euMdocData["given_name"]?.asTstr)
+        assertEquals("Mustermann", euMdocData["family_name"]?.asTstr)
         assertEquals(testPortraitBytes.toList(), euMdocData["portrait"]?.asBstr?.toList())
-        assertEquals(20L, euMdocData["age_in_years"]?.asNumber)
-        assertEquals(true, euMdocData["age_over_18"]?.asBoolean)
-        assertEquals(false, euMdocData["age_over_21"]?.asBoolean)
+        assertEquals("ZZ", euMdocData["place_of_birth"]?.get("country")?.asTstr)
+        assertEquals("Sample State", euMdocData["place_of_birth"]?.get("region")?.asTstr)
+        assertEquals("Sample City", euMdocData["place_of_birth"]?.get("locality")?.asTstr)
 
         // Verify KeyBoundSdJwtVcCredential was also minted
         val sdJwtCred = document
@@ -302,14 +304,17 @@ class DeveloperSelfSignedDocumentIssuerTest {
             testPortraitBytes.toBase64Url(),
             processedPayload["picture"]?.jsonPrimitive?.content
         )
-        assertEquals(20, processedPayload["age_in_years"]?.jsonPrimitive?.content?.toInt())
         assertEquals(
-            true,
-            processedPayload["age_equal_or_over"]?.jsonObject?.get("18")?.jsonPrimitive?.content?.toBooleanStrict()
+            "ZZ",
+            processedPayload["place_of_birth"]?.jsonObject?.get("country")?.jsonPrimitive?.content
         )
         assertEquals(
-            false,
-            processedPayload["age_equal_or_over"]?.jsonObject?.get("21")?.jsonPrimitive?.content?.toBooleanStrict()
+            "Sample State",
+            processedPayload["place_of_birth"]?.jsonObject?.get("region")?.jsonPrimitive?.content
+        )
+        assertEquals(
+            "Sample City",
+            processedPayload["place_of_birth"]?.jsonObject?.get("locality")?.jsonPrimitive?.content
         )
         val validation = sdJwtCred.validate(sdJwtCred.issuerProvidedData)
         assertFalse("Validation errors: ${validation.errors}", validation.hasErrors)

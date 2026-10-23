@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
@@ -47,6 +48,8 @@ buildConfig {
 }
 
 kotlin {
+    jvmToolchain(21)
+
     jvm()
     js(IR) {
         browser()
@@ -59,6 +62,10 @@ kotlin {
         namespace = "org.multipaz.wallet.shared"
         compileSdk = 36
         minSdk = 29
+
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
+        }
 
         withHostTestBuilder {
         }

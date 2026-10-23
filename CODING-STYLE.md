@@ -65,3 +65,19 @@ with the following changes
 
 * **Log exceptions:** When catching an exception, always log it using `Logger.e()` or `Logger.w()`
   depending on what is appropriate.
+
+## Java / JVM Target Versions
+
+* **JDK 21 Toolchain for JVM, Java 17 for Android:** The build uses
+  `jvmToolchain(21)` so `jvmMain` in `shared` and `backend` target **JVM 21**
+  (as required by the Multipaz SDK). However, all Android library and
+  application targets (`androidLibrary` in `shared` and
+  `android { compileOptions }` in `androidApp`) must explicitly remain at
+  **`JvmTarget.JVM_17`** and **`JavaVersion.VERSION_17`**.
+
+* **Avoid Java 21-only APIs in Android source sets:** Because Gradle compiles
+  with JDK 21, code in `commonMain`, `androidMain`, and `androidApp` must not
+  invoke JDK 21-only APIs that are absent on Android / Java 17 (for example
+  `java.util.SequencedCollection` methods such as `getFirst()` / `getLast()` on
+  Java collections—use Kotlin's `.first()` / `.last()` extensions instead).
+

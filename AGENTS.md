@@ -73,6 +73,12 @@ files.
 * **Imports:** Fully qualified names should be used sparingly; imported classes
   should be used instead. Star imports (e.g., `import package.*`) must never be
   used.
+* **Java / JVM Target Versions:** The build uses `jvmToolchain(21)` so JVM
+  targets (`shared` JVM and `backend`) compile for JVM 21, as required by the
+  Multipaz SDK. However, all Android targets (`androidLibrary` in `shared` and
+  `android { compileOptions }` in `androidApp`) must explicitly remain at
+  `JvmTarget.JVM_17` / `JavaVersion.VERSION_17`. Never call Java 21-only JDK
+  methods in `commonMain`, `androidMain`, or `androidApp`.
 * **Markdown Files:** All Markdown (`.md`) documentation files must use line
   breaks and wrap at 80 columns, with exceptions to avoid breaking hyperlinks.
 * **Security First:** Never hardcode secrets. Always validate inputs, especially

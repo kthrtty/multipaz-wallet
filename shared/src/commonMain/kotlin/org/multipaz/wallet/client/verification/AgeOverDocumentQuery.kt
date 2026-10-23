@@ -5,17 +5,10 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.yearsUntil
 import kotlinx.io.bytestring.ByteString
-import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.add
-import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.buildJsonArray
-import kotlinx.serialization.json.contentOrNull
-import kotlinx.serialization.json.intOrNull
-import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.multipaz.cbor.CborMap
-import org.multipaz.claim.JsonClaim
 import org.multipaz.claim.MdocClaim
 import org.multipaz.documenttype.knowntypes.Aadhaar
 import org.multipaz.documenttype.knowntypes.DrivingLicense
@@ -23,7 +16,6 @@ import org.multipaz.documenttype.knowntypes.EUPersonalID
 import org.multipaz.documenttype.knowntypes.IDPass
 import org.multipaz.documenttype.knowntypes.PhotoID
 import org.multipaz.util.fromBase64Url
-import org.multipaz.verification.MdocVerifiedPresentation
 import kotlin.time.Instant
 
 internal fun List<MdocClaim>.claimsInNamespace(namespace: String): Map<String, MdocClaim> {
@@ -131,10 +123,7 @@ data class AgeOverDocumentQuery(
             namespaces = buildMap {
                 put(EUPersonalID.EUPID_NAMESPACE, listOf(
                     IsoMdocDataElementRequest(dataElementName = "portrait"),
-                    IsoMdocDataElementRequest(
-                        dataElementName = "age_over_${ageOver.toDoubleDigits()}",
-                        alternativeDataElements = listOf("age_in_years", "birth_date")
-                    ),
+                    IsoMdocDataElementRequest(dataElementName = "birth_date"),
                     IsoMdocDataElementRequest(dataElementName = "issuing_authority"),
                     IsoMdocDataElementRequest(dataElementName = "issuing_country"),
                 ))
@@ -149,7 +138,14 @@ data class AgeOverDocumentQuery(
                     revocationStatus = verifiedPresentation.revocationStatus,
                     certificateChain = verifiedPresentation.documentSignerCertChain,
                     portrait = ByteString(ns["portrait"]!!.value.asBstr),
-                    isAgeOver = processAgeOver(dataElements = ns, atTime = atTime, targetAge = ageOver),
+                    isAgeOver = processAgeOver(
+                        dataElements = ns,
+                        atTime = atTime,
+                        targetAge = ageOver,
+                        ageOverDataElementName = null,
+                        ageInYearsDataElementName = null,
+                        birthDateDataElementName = "birth_date",
+                    ),
                 )
             }
         ),
@@ -159,13 +155,7 @@ data class AgeOverDocumentQuery(
             vct = EUPersonalID.EUPID_VCT,
             claims = listOf(
                 SdJwtVcClaimRequest(buildJsonArray { add("picture") }),
-                SdJwtVcClaimRequest(
-                    claimPath = buildJsonArray { add("age_equal_or_over"); add(ageOver.toDoubleDigits()) },
-                    alternativeClaims = listOf(
-                        buildJsonArray { add("age_in_years") },
-                        buildJsonArray { add("birthdate") }
-                    )
-                ),
+                SdJwtVcClaimRequest(buildJsonArray { add("birthdate") }),
                 SdJwtVcClaimRequest(buildJsonArray { add("issuing_authority") }),
                 SdJwtVcClaimRequest(buildJsonArray { add("issuing_country") }),
             ),
@@ -173,6 +163,8 @@ data class AgeOverDocumentQuery(
                 val claims = verifiedPresentation.issuerSignedClaims.associate {
                     it.claimPath.first().jsonPrimitive.content to it
                 }
+                val birthDate = LocalDate.parse(claims["birthdate"]!!.value.jsonPrimitive.content)
+                val today = atTime.toLocalDateTime(TimeZone.currentSystemDefault()).date
                 AgeOverDocumentQueryResult(
                     trustResult = trustResult,
                     documentType = DocumentType.EU_PID,
@@ -181,11 +173,7 @@ data class AgeOverDocumentQuery(
                     revocationStatus = verifiedPresentation.revocationStatus,
                     certificateChain = verifiedPresentation.documentSignerCertChain,
                     portrait = ByteString(claims["picture"]!!.value.jsonPrimitive.content.fromBase64Url()),
-                    isAgeOver = processAgeOverSdJwtVc(
-                        claims = claims,
-                        atTime = atTime,
-                        targetAge = ageOver,
-                    ),
+                    isAgeOver = birthDate.yearsUntil(today) >= ageOver,
                 )
             }
         ),
@@ -268,11 +256,13 @@ private fun processAgeOver(
     dataElements: Map<String, MdocClaim>,
     atTime: Instant,
     targetAge: Int,
-    ageOverDataElementName: String = "age_over_${targetAge.toDoubleDigits()}",
+    ageOverDataElementName: String? = "age_over_${targetAge.toDoubleDigits()}",
     ageInYearsDataElementName: String? = "age_in_years",
     birthDateDataElementName: String? = "birth_date",
 ): Boolean {
-    val isAgeOver = dataElements[ageOverDataElementName]?.value?.asBoolean
+    val isAgeOver = ageOverDataElementName?.let {
+        dataElements[ageOverDataElementName]?.value?.asBoolean
+    }
         ?: ageInYearsDataElementName?.let {
             dataElements[ageInYearsDataElementName]?.value?.asNumber?.let { ageInYears -> ageInYears >= targetAge }
         }
@@ -291,36 +281,6 @@ private fun processAgeOver(
         ?: throw IllegalStateException(
             "None of ${ageOverDataElementName}, ${ageInYearsDataElementName}, and $birthDateDataElementName " +
                     "data elements found"
-        )
-    return isAgeOver
-}
-
-private fun processAgeOverSdJwtVc(
-    claims: Map<String, JsonClaim>,
-    atTime: Instant,
-    targetAge: Int,
-    ageOverClaimName: JsonArray = buildJsonArray { add("age_equal_or_over"); add(targetAge.toDoubleDigits()) },
-    ageInYearsClaimName: JsonArray? = buildJsonArray { add("age_in_years") },
-    birthDateClaimName: JsonArray? = buildJsonArray { add("birthdate") },
-): Boolean {
-
-    val isAgeOver = claims[ageOverClaimName[0].jsonPrimitive.content]?.value?.jsonObject
-        ?.get(ageOverClaimName[1].jsonPrimitive.content)
-        ?.jsonPrimitive?.booleanOrNull
-        ?: ageInYearsClaimName?.let {
-            claims[ageInYearsClaimName[0].jsonPrimitive.content]?.value?.jsonPrimitive?.intOrNull?.let { ageInYears ->
-                ageInYears >= targetAge
-            }
-        }
-        ?: birthDateClaimName?.let {
-            claims[birthDateClaimName[0].jsonPrimitive.content]?.value?.jsonPrimitive?.contentOrNull?.let { birthDateString ->
-                val birthDate = LocalDate.parse(birthDateString)
-                val today = atTime.toLocalDateTime(TimeZone.currentSystemDefault()).date
-                birthDate.yearsUntil(today) >= targetAge
-            }
-        }
-        ?: throw IllegalStateException(
-            "None of ${ageOverClaimName}, ${ageInYearsClaimName}, and $birthDateClaimName claims found"
         )
     return isAgeOver
 }
